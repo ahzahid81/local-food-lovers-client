@@ -10,17 +10,15 @@ const Navbar = () => {
       await logOut();
       toast.success("Logged out successfully.");
     } catch (error) {
-      toast.error(error || "Logout failed. Try again.");
+      toast.error("Logout failed. Try again.");
     }
   };
 
-  // User first letter avatar fallback
   const userInitial =
     user?.displayName?.charAt(0)?.toUpperCase() ||
     user?.email?.charAt(0)?.toUpperCase() ||
     "U";
 
-  // Navbar Links
   const navLinks = (
     <>
       <li>
@@ -63,7 +61,6 @@ const Navbar = () => {
               Add Review
             </NavLink>
           </li>
-
           <li>
             <NavLink
               to="/my-reviews"
@@ -76,7 +73,6 @@ const Navbar = () => {
               My Reviews
             </NavLink>
           </li>
-
           <li>
             <NavLink
               to="/my-favorites"
@@ -95,13 +91,11 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-base-100/90 backdrop-blur border-b border-base-200">
+    <div className="bg-base-100/90 backdrop-blur border-b border-base-200 relative z-50">
       <div className="navbar max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-
         {/* LEFT */}
         <div className="navbar-start">
-
-          {/* Mobile Menu */}
+          {/* Mobile menu */}
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -115,18 +109,16 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </div>
-
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-56"
+              className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-56 z-50"
             >
               {navLinks}
 
               {user && (
                 <>
-                  <div className="divider my-3"></div>
+                  <div className="divider my-3" />
 
-                  {/* Premium Logout Button (mobile) */}
                   <li>
                     <button
                       onClick={handleLogout}
@@ -173,8 +165,6 @@ const Navbar = () => {
 
         {/* RIGHT */}
         <div className="navbar-end gap-3">
-
-          {/* Not Logged In */}
           {!user && (
             <>
               <Link
@@ -183,7 +173,6 @@ const Navbar = () => {
               >
                 Login
               </Link>
-
               <Link
                 to="/register"
                 className="
@@ -199,24 +188,23 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Logged In */}
           {user && (
             <div className="flex items-center gap-2">
-
-              {/* Optional User Info */}
               <div className="hidden md:block text-right">
-                <p className="text-sm font-semibold leading-tight">{user.displayName || "Foodie"}</p>
+                <p className="text-sm font-semibold leading-tight">
+                  {user.displayName || "Foodie"}
+                </p>
                 <p className="text-xs text-gray-500">
-                  {user.email?.slice(0, 20)}{user.email?.length > 20 && "..."}
+                  {user.email?.slice(0, 20)}
+                  {user.email?.length > 20 && "..."}
                 </p>
               </div>
 
-              {/* Avatar Dropdown */}
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full border-2 border-primary">
                     {user.photoURL ? (
-                      <img src={user.photoURL} alt="Avatar" />
+                      <img src={user.photoURL} alt="User avatar" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold">
                         {userInitial}
@@ -227,14 +215,25 @@ const Navbar = () => {
 
                 <ul
                   tabIndex={0}
-                  className="mt-3 p-3 menu menu-sm dropdown-content bg-base-100 rounded-box shadow w-56"
+                  className="mt-3 p-3 menu menu-sm dropdown-content bg-base-100 rounded-box shadow w-56 z-50"
                 >
                   <li className="px-2 py-2 border-b border-base-200">
-                    <p className="text-sm font-semibold">{user.displayName || "Foodie User"}</p>
+                    <p className="text-sm font-semibold">
+                      {user.displayName || "Foodie User"}
+                    </p>
                     <p className="text-xs text-gray-500">{user.email}</p>
                   </li>
 
-                  {/* Premium Logout Button */}
+                  <li>
+                    <NavLink to="/add-review">Add Review</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/my-reviews">My Reviews</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/my-favorites">My Favorites</NavLink>
+                  </li>
+
                   <li className="mt-2">
                     <button
                       onClick={handleLogout}
@@ -264,7 +263,6 @@ const Navbar = () => {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>

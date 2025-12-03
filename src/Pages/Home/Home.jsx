@@ -3,10 +3,11 @@ import FeaturedReviews from "./FeaturedReviews";
 
 const Home = () => {
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 md:space-y-14">
       <Hero />
       <FeaturedReviews />
-      {/* পরবর্তীতে আরও ২টি extra section যোগ করব */}
+
+      {/* পরে এখানে আরও দুইটা custom section add করব */}
     </div>
   );
 };
