@@ -10,11 +10,17 @@ const Navbar = () => {
       await logOut();
       toast.success("Logged out successfully.");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to logout. Please try again.");
+      toast.error(error || "Logout failed. Try again.");
     }
   };
 
+  // User first letter avatar fallback
+  const userInitial =
+    user?.displayName?.charAt(0)?.toUpperCase() ||
+    user?.email?.charAt(0)?.toUpperCase() ||
+    "U";
+
+  // Navbar Links
   const navLinks = (
     <>
       <li>
@@ -29,6 +35,7 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
+
       <li>
         <NavLink
           to="/all-reviews"
@@ -41,44 +48,112 @@ const Navbar = () => {
           All Reviews
         </NavLink>
       </li>
+
+      {user && (
+        <>
+          <li>
+            <NavLink
+              to="/add-review"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary font-semibold"
+                  : "hover:text-primary transition"
+              }
+            >
+              Add Review
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/my-reviews"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary font-semibold"
+                  : "hover:text-primary transition"
+              }
+            >
+              My Reviews
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/my-favorites"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary font-semibold"
+                  : "hover:text-primary transition"
+              }
+            >
+              My Favorites
+            </NavLink>
+          </li>
+        </>
+      )}
     </>
   );
 
-  const userInitial =
-    user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || "U";
-
   return (
-    <div className="bg-base-100/90 border-b border-base-200 backdrop-blur">
+    <div className="bg-base-100/90 backdrop-blur border-b border-base-200">
       <div className="navbar max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-        {/* Left */}
+
+        {/* LEFT */}
         <div className="navbar-start">
-          {/* Mobile dropdown */}
+
+          {/* Mobile Menu */}
           <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost lg:hidden"
-            >
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-6 w-6"
                 fill="none"
-                viewBox="0 0 24 24"
                 stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </div>
+
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow bg-base-100 rounded-box w-52"
+              className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-56"
             >
               {navLinks}
+
+              {user && (
+                <>
+                  <div className="divider my-3"></div>
+
+                  {/* Premium Logout Button (mobile) */}
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="
+                        w-full flex items-center gap-2 px-4 py-2 
+                        rounded-xl bg-gradient-to-r from-red-500 to-red-600 
+                        text-white font-medium shadow-md hover:shadow-lg 
+                        hover:scale-[1.03] active:scale-95 transition-all
+                      "
+                    >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        className='h-5 w-5'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        stroke='currentColor'
+                        strokeWidth='2'
+                      >
+                        <path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4' />
+                        <polyline points='16 17 21 12 16 7' />
+                        <line x1='21' y1='12' x2='9' y2='12' />
+                      </svg>
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 
@@ -91,13 +166,15 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Center */}
+        {/* CENTER */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">{navLinks}</ul>
+          <ul className="menu menu-horizontal px-1 gap-3">{navLinks}</ul>
         </div>
 
-        {/* Right */}
-        <div className="navbar-end gap-2">
+        {/* RIGHT */}
+        <div className="navbar-end gap-3">
+
+          {/* Not Logged In */}
           {!user && (
             <>
               <Link
@@ -106,14 +183,14 @@ const Navbar = () => {
               >
                 Login
               </Link>
-              {/* প্রিমিয়াম Register বাটন */}
+
               <Link
                 to="/register"
                 className="
                   btn btn-sm rounded-full normal-case border-0
                   bg-gradient-to-r from-primary to-orange-500
                   text-white shadow-md hover:shadow-lg
-                  hover:scale-[1.03] active:scale-95
+                  hover:scale-[1.05] active:scale-95
                   transition-transform duration-150
                 "
               >
@@ -122,28 +199,24 @@ const Navbar = () => {
             </>
           )}
 
+          {/* Logged In */}
           {user && (
             <div className="flex items-center gap-2">
-              {/* Desktop user name (optional) */}
+
+              {/* Optional User Info */}
               <div className="hidden md:block text-right">
-                <p className="text-sm font-semibold leading-tight">
-                  {user.displayName || "Foodie"}
-                </p>
+                <p className="text-sm font-semibold leading-tight">{user.displayName || "Foodie"}</p>
                 <p className="text-xs text-gray-500">
-                  {user.email?.slice(0, 22)}
-                  {user.email?.length > 22 ? "..." : ""}
+                  {user.email?.slice(0, 20)}{user.email?.length > 20 && "..."}
                 </p>
               </div>
 
               {/* Avatar Dropdown */}
               <div className="dropdown dropdown-end">
-                <label
-                  tabIndex={0}
-                  className="btn btn-ghost btn-circle avatar"
-                >
+                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full border-2 border-primary">
                     {user.photoURL ? (
-                      <img src={user.photoURL} alt="User avatar" />
+                      <img src={user.photoURL} alt="Avatar" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold">
                         {userInitial}
@@ -151,32 +224,39 @@ const Navbar = () => {
                     )}
                   </div>
                 </label>
+
                 <ul
                   tabIndex={0}
-                  className="mt-3 z-[10] menu menu-sm dropdown-content bg-base-100 rounded-box shadow w-56"
+                  className="mt-3 p-3 menu menu-sm dropdown-content bg-base-100 rounded-box shadow w-56"
                 >
-                  <li className="px-4 py-3 border-b border-base-200">
-                    <p className="text-sm font-semibold">
-                      {user.displayName || "Foodie User"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {user.email}
-                    </p>
+                  <li className="px-2 py-2 border-b border-base-200">
+                    <p className="text-sm font-semibold">{user.displayName || "Foodie User"}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
                   </li>
-                  <li>
-                    <NavLink to="/add-review">Add Review</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/my-reviews">My Reviews</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/my-favorites">My Favorites</NavLink>
-                  </li>
-                  <li>
+
+                  {/* Premium Logout Button */}
+                  <li className="mt-2">
                     <button
                       onClick={handleLogout}
-                      className="text-error font-medium"
+                      className="
+                        w-full flex items-center gap-2 px-4 py-2 
+                        rounded-xl bg-gradient-to-r from-red-500 to-red-600 
+                        text-white font-medium shadow-md hover:shadow-lg 
+                        hover:scale-[1.03] active:scale-95 transition-all
+                      "
                     >
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        className='h-5 w-5'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        stroke='currentColor'
+                        strokeWidth='2'
+                      >
+                        <path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4' />
+                        <polyline points='16 17 21 12 16 7' />
+                        <line x1='21' y1='12' x2='9' y2='12' />
+                      </svg>
                       Logout
                     </button>
                   </li>
@@ -184,6 +264,7 @@ const Navbar = () => {
               </div>
             </div>
           )}
+
         </div>
       </div>
     </div>
