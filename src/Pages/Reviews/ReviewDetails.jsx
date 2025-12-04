@@ -5,9 +5,14 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 
 const fetchReviewById = async ({ queryKey }) => {
   const [_key, id] = queryKey;
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/reviews/${id}`);
+  const url = `${import.meta.env.VITE_API_URL}/reviews/${id}`;
+  console.log("Fetching review details from:", url);
+
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error("Failed to fetch review details");
+    const text = await res.text().catch(() => "");
+    console.error("Review details fetch error:", res.status, text);
+    throw new Error(`Failed to fetch review details (status ${res.status})`);
   }
   return res.json();
 };
@@ -56,10 +61,20 @@ const ReviewDetails = () => {
   if (isError) {
     return (
       <section className="mt-4 md:mt-6 mb-10">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-sm text-red-600">
+        <div className="max-w-3xl mx-auto text-center space-y-3">
+          <p className="text-sm font-semibold text-red-600">
             {error.message}
-          </div>
+          </p>
+          <p className="text-xs text-gray-500">
+            Check if your server has <code>/reviews/:id</code> route and{" "}
+            <code>VITE_API_URL</code> is correct.
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="btn btn-sm rounded-full mt-2"
+          >
+            Go Back
+          </button>
         </div>
       </section>
     );
@@ -115,7 +130,9 @@ const ReviewDetails = () => {
                 <div className="flex items-center gap-1">
                   <FaStar className="text-yellow-400 text-xl" />
                   <span className="text-lg font-semibold">
-                    {review.rating?.toFixed ? review.rating.toFixed(1) : review.rating}
+                    {review.rating?.toFixed
+                      ? review.rating.toFixed(1)
+                      : review.rating}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -154,7 +171,6 @@ const ReviewDetails = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="divider my-0"></div>
 
             {/* Review Text */}
