@@ -7,6 +7,7 @@ import useAuth from "../../Hooks/useAuth";
 
 const fetchReviews = async ({ queryKey }) => {
   const [_key, search] = queryKey;
+  console.log(import.meta.env.VITE_API_URL);
   const url = new URL(`${import.meta.env.VITE_API_URL}/reviews`);
   if (search) {
     url.searchParams.append("search", search);
