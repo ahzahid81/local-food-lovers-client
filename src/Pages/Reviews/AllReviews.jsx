@@ -51,13 +51,13 @@ const AllReviews = () => {
 
   // User favorites (for heart filled state)
   const {
-    data: favorites = [],
-    isLoading: favLoading,
-  } = useQuery({
-    queryKey: ["favorites", user?.email],
-    queryFn: fetchFavorites,
-    enabled: !!user?.email, // শুধুমাত্র লগইন থাকলে কল হবে
-  });
+  data: favorites = [],
+  isLoading: favLoading,
+} = useQuery({
+  queryKey: ["favorites", user?.email],
+  queryFn: fetchFavorites,
+  enabled: !!user?.email,
+});
 
   const addFavoriteMutation = useMutation({
     mutationFn: async (review) => {
@@ -133,7 +133,8 @@ const AllReviews = () => {
             Discover <span className="text-primary">local food stories</span>
           </h1>
           <p className="text-sm text-gray-500 mt-1 max-w-md">
-            Browse what people are eating nearby. Use search to find your next favorite dish.
+            Browse what people are eating nearby. Use search to find your next
+            favorite dish.
           </p>
         </div>
 
@@ -181,9 +182,7 @@ const AllReviews = () => {
       {isError && (
         <div className="p-6 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-600">
           Failed to load reviews. Please try again later.
-          <div className="mt-1 text-xs text-red-400">
-            {error?.message}
-          </div>
+          <div className="mt-1 text-xs text-red-400">{error?.message}</div>
         </div>
       )}
 
@@ -197,7 +196,8 @@ const AllReviews = () => {
           ) : (
             <>
               <p className="text-xs text-gray-500 mb-3">
-                Showing {reviews.length} review{reviews.length > 1 ? "s" : ""}{" "}
+                Showing {reviews.length} review
+                {reviews.length > 1 ? "s" : ""}{" "}
                 {searchText && (
                   <>
                     for <span className="font-semibold">"{searchText}"</span>
@@ -215,11 +215,17 @@ const AllReviews = () => {
                       className="rounded-2xl border border-base-200 bg-base-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
                     >
                       {/* Image + favorite */}
-                      <div className="relative h-44 w-full overflow-hidden">
+                      <div className="relative w-full h-48 overflow-hidden rounded-t-2xl bg-base-200">
                         <img
                           src={review.foodImage}
                           alt={review.foodName}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src =
+                              "https://via.placeholder.com/800x600.png?text=Food+Image+Not+Available";
+                          }}
                         />
 
                         <button

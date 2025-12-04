@@ -37,7 +37,6 @@ const EditReview = () => {
     formState: { errors },
   } = useForm();
 
-  // যখন review data আসবে, form এ সেট করে দিবো
   useEffect(() => {
     if (review) {
       reset({
